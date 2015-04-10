@@ -5,14 +5,14 @@ and map!
 
 Benchmark for doing 3 calls `setImmediate` 1 million times:
 
-* `async.series`: 8960ms
-* `async.eachSeries`: 6150ms
-* `async.mapSeries`: 7831ms
-* non-reusable `setImmediate`: 5701ms
-* `fastseries` with results: 6364ms
-* `fastseries` without results: 5781ms
-* `fastseries` each: 6557ms
-* `fastseries` map: 7031ms
+* `async.series`: 9129ms
+* `async.eachSeries`: 5665ms
+* `async.mapSeries`: 7739ms
+* non-reusable `setImmediate`: 5569ms
+* `fastseries` with results: 6015ms
+* `fastseries` without results: 5634ms
+* `fastseries` each: 5619ms
+* `fastseries` map: 6141ms
 
 These benchmarks where taken via `bench.js` on iojs 1.6.1, on a MacBook
 Pro Retina 2014.
@@ -97,8 +97,7 @@ function completed () {
 
 ## Caveats
 
-The `results` array will be non-ordered, and the `done` function will
-be called only once, even if more than one error happen.
+The `done` function will be called only once, even if more than one error happen.
 
 This library works by caching the latest used function, so that running a new series
 does not cause **any memory allocations**.

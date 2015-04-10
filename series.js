@@ -21,13 +21,15 @@ function series (options) {
       released(last)
     } else {
       holder._callback = done
-      if (typeof toCall === 'function') {
+
+      if (toCall.call) {
         holder._list = arg
-        holder._arg = toCall
+        holder._each = toCall
       } else {
         holder._list = toCall
         holder._arg = arg
       }
+
       holder._callThat = that
       holder.release()
     }
@@ -46,22 +48,25 @@ function reset () {
   this._arg = null
   this._callThat = null
   this._callback = nop
+  this._each = null
 }
 
 function NoResultsHolder (_release) {
   reset.call(this)
 
   var that = this
+  var i = 0
   this.release = function () {
-    var next = that._list.shift()
-
-    if (typeof next === 'function') {
-      next.call(that._callThat, that._arg, that.release)
-    } else if (next) {
-      that._arg.call(that._callThat, next, that.release)
+    if (i < that._list.length) {
+      if (that._each) {
+        that._each.call(that._callThat, that._list[i++], that.release)
+      } else {
+        that._list[i++].call(that._callThat, that._arg, that.release)
+      }
     } else {
       that._callback()
       reset.call(that)
+      i = 0
       _release(that)
     }
   }
@@ -72,29 +77,25 @@ function ResultsHolder (_release) {
 
   this._results = []
   this._err = null
-  this._first = true
 
   var that = this
+  var i = 0
   this.release = function (err, result) {
-    if (that._first) {
-      that._first = false
-    } else {
-      that._err = err
-      that._results.push(result)
-    }
+    that._err = err
+    if (i !== 0) that._results.push(result)
 
-    var next = that._list.shift()
-
-    if (typeof next === 'function') {
-      next.call(that._callThat, that._arg, that.release)
-    } else if (next) {
-      that._arg.call(that._callThat, next, that.release)
+    if (i < that._list.length) {
+      if (that._each) {
+        that._each.call(that._callThat, that._list[i++], that.release)
+      } else {
+        that._list[i++].call(that._callThat, that._arg, that.release)
+      }
     } else {
       that._callback(that._err, that._results)
       reset.call(that)
       that._results = []
       that._err = null
-      that._first = true
+      i = 0
       _release(that)
     }
   }
