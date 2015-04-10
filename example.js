@@ -1,6 +1,6 @@
-var parallel = require('./')({
+var series = require('./')({
   // this is a function that will be called
-  // when a parallel completes
+  // when a series completes
   released: completed,
 
   // we want results and errors
@@ -8,33 +8,38 @@ var parallel = require('./')({
   results: true
 })
 
-parallel(
+series(
   {}, // what will be this in the functions
   [something, something, something], // functions to call
   42, // the first argument of the functions
-  next // the function to be called when the parallel ends
+  next // the function to be called when the series ends
 )
 
+function late (arg, cb) {
+  console.log('finishing', arg)
+  cb(null, 'myresult-' + arg)
+}
+
 function something (arg, cb) {
-  setImmediate(cb, null, 'myresult')
+  setTimeout(late, 1000, arg, cb)
 }
 
 function next (err, results) {
   if (err) {
     // do something here!
   }
-  console.log('parallel completed, results:', results)
+  console.log('series completed, results:', results)
 
-  parallel({}, something, [1, 2, 3], done)
+  series({}, something, [1, 2, 3], done)
 }
 
 function done (err, results) {
   if (err) {
     // do something here!
   }
-  console.log('parallel completed, results:', results)
+  console.log('series completed, results:', results)
 }
 
 function completed () {
-  console.log('parallel completed!')
+  console.log('series completed!')
 }

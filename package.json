@@ -1,8 +1,8 @@
 {
-  "name": "fastparallel",
-  "version": "1.2.1",
-  "description": "Zero-overhead asynchronous parallel/each/map function call",
-  "main": "parallel.js",
+  "name": "fastseries",
+  "version": "0.0.1",
+  "description": "Zero-overhead asynchronous series/each/map function calls",
+  "main": "series.js",
   "scripts": {
     "lint": "standard",
     "test": "tape test.js | faucet"
@@ -13,7 +13,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/mcollina/fastparallel.git"
+    "url": "https://github.com/mcollina/fastseries.git"
   },
   "keywords": [
     "parallel",
@@ -23,9 +23,9 @@
   "author": "Matteo Collina <hello@matteocollina.com>",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/mcollina/fastparallel/issues"
+    "url": "https://github.com/mcollina/fastseries/issues"
   },
-  "homepage": "https://github.com/mcollina/fastparallel",
+  "homepage": "https://github.com/mcollina/fastseries",
   "devDependencies": {
     "async": "^0.9.0",
     "faucet": "0.0.1",

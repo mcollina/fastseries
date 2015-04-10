@@ -1,26 +1,29 @@
 var test = require('tape')
-var parallel = require('./')
+var series = require('./')
 
 test('basically works', function (t) {
-  t.plan(6)
+  t.plan(8)
 
-  var instance = parallel({
+  var instance = series({
     released: released
   })
   var count = 0
   var obj = {}
 
-  instance(obj, [something, something], 42, function done () {
+  instance(obj, [build(0), build(1)], 42, function done () {
     t.equal(count, 2, 'all functions must have completed')
   })
 
-  function something (arg, cb) {
-    t.equal(obj, this)
-    t.equal(arg, 42)
-    setImmediate(function () {
-      count++
-      cb()
-    })
+  function build (expected) {
+    return function something (arg, cb) {
+      t.equal(obj, this)
+      t.equal(arg, 42)
+      t.equal(expected, count)
+      setImmediate(function () {
+        count++
+        cb()
+      })
+    }
   }
 
   function released () {
@@ -31,7 +34,7 @@ test('basically works', function (t) {
 test('accumulates results', function (t) {
   t.plan(8)
 
-  var instance = parallel({
+  var instance = series({
     released: released
   })
   var count = 0
@@ -60,7 +63,7 @@ test('accumulates results', function (t) {
 test('fowards errs', function (t) {
   t.plan(3)
 
-  var instance = parallel({
+  var instance = series({
     released: released
   })
   var count = 0
@@ -93,7 +96,7 @@ test('fowards errs', function (t) {
 test('does not forward errors or result with results:false flag', function (t) {
   t.plan(8)
 
-  var instance = parallel({
+  var instance = series({
     released: released,
     results: false
   })
@@ -123,7 +126,7 @@ test('does not forward errors or result with results:false flag', function (t) {
 test('should call done and released if an empty is passed', function (t) {
   t.plan(2)
 
-  var instance = parallel({
+  var instance = series({
     released: released
   })
   var obj = {}
@@ -140,7 +143,7 @@ test('should call done and released if an empty is passed', function (t) {
 test('each support', function (t) {
   t.plan(8)
 
-  var instance = parallel({
+  var instance = series({
     released: released
   })
   var count = 0
@@ -148,7 +151,7 @@ test('each support', function (t) {
   var args = [1, 2, 3]
   var i = 0
 
-  instance(obj, something, args, function done () {
+  instance(obj, something, [].concat(args), function done () {
     t.equal(count, 3, 'all functions must have completed')
   })
 
