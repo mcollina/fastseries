@@ -1,6 +1,6 @@
 {
   "name": "fastseries",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Zero-overhead asynchronous series/each/map function calls",
   "main": "series.js",
   "scripts": {
@@ -16,7 +16,7 @@
     "url": "https://github.com/mcollina/fastseries.git"
   },
   "keywords": [
-    "parallel",
+    "series",
     "fast",
     "async"
   ],
