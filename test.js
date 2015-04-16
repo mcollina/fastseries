@@ -71,7 +71,7 @@ test('fowards errs', function (t) {
 
   instance(obj, [somethingErr, something], 42, function done (err, results) {
     t.error(err)
-    t.equal(count, 2, 'all functions must have completed')
+    t.equal(count, 1, 'only the first function must have completed')
   })
 
   function something (arg, cb) {

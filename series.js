@@ -76,15 +76,13 @@ function ResultsHolder (_release) {
   reset.call(this)
 
   this._results = []
-  this._err = null
 
   var that = this
   var i = 0
   this.release = function (err, result) {
-    that._err = err
     if (i !== 0) that._results.push(result)
 
-    if (i < that._list.length) {
+    if (!err && i < that._list.length) {
       if (that._each) {
         that._each.call(that._callThat, that._list[i++], that.release)
       } else {
@@ -94,7 +92,6 @@ function ResultsHolder (_release) {
       that._callback.call(that._callThat, that._err, that._results)
       reset.call(that)
       that._results = []
-      that._err = null
       i = 0
       _release(that)
     }
