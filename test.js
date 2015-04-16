@@ -61,7 +61,7 @@ test('accumulates results', function (t) {
 })
 
 test('fowards errs', function (t) {
-  t.plan(3)
+  t.plan(4)
 
   var instance = series({
     released: released
@@ -70,7 +70,8 @@ test('fowards errs', function (t) {
   var obj = {}
 
   instance(obj, [somethingErr, something], 42, function done (err, results) {
-    t.error(err)
+    t.ok(err, 'error exists')
+    t.equal(err.message, 'this is an err!')
     t.equal(count, 1, 'only the first function must have completed')
   })
 
