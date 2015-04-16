@@ -64,7 +64,7 @@ function NoResultsHolder (_release) {
         that._list[i++].call(that._callThat, that._arg, that.release)
       }
     } else {
-      that._callback()
+      that._callback.call(that._callThat)
       reset.call(that)
       i = 0
       _release(that)
@@ -91,7 +91,7 @@ function ResultsHolder (_release) {
         that._list[i++].call(that._callThat, that._arg, that.release)
       }
     } else {
-      that._callback(that._err, that._results)
+      that._callback.call(that._callThat, that._err, that._results)
       reset.call(that)
       that._results = []
       that._err = null
