@@ -17,7 +17,7 @@ function series (options) {
     last = null
 
     if (toCall.length === 0) {
-      done()
+      done.call(that)
       released(last)
     } else {
       holder._callback = done

@@ -203,3 +203,14 @@ test('call the callback with the given this with no results', function (t) {
     }
   }
 })
+
+test('call the callback with the given this with no data', function (t) {
+  t.plan(1)
+
+  var instance = series()
+  var obj = {}
+
+  instance(obj, [], 42, function done () {
+    t.equal(obj, this, 'this matches')
+  })
+})
