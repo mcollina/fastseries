@@ -5,16 +5,16 @@ and map!
 
 Benchmark for doing 3 calls `setImmediate` 1 million times:
 
-* `async.series`: 9129ms
-* `async.eachSeries`: 5665ms
-* `async.mapSeries`: 7739ms
-* non-reusable `setImmediate`: 5569ms
-* `fastseries` with results: 6015ms
-* `fastseries` without results: 5634ms
-* `fastseries` each: 5619ms
-* `fastseries` map: 6141ms
+* non-reusable `setImmediate`: 5967ms
+* `async.series`: 9573ms
+* `async.eachSeries`: 6196ms
+* `async.mapSeries`: 8495ms
+* `fastseries` with results: 6231ms
+* `fastseries` without results: 6182ms
+* `fastseries` map: 6288ms
+* `fastseries` each: 6137ms
 
-These benchmarks where taken via `bench.js` on iojs 1.6.1, on a MacBook
+These benchmarks where taken via `bench.js` on iojs 1.8.1, on a MacBook
 Pro Retina 2014.
 
 If you need zero-overhead parallel function call, check out

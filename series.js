@@ -80,7 +80,7 @@ function ResultsHolder (_release) {
   var that = this
   var i = 0
   this.release = function (err, result) {
-    if (i !== 0) that._results.push(result)
+    if (i !== 0) that._results[i - 1] = result
 
     if (!err && i < that._list.length) {
       if (that._each) {
