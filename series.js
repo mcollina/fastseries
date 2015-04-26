@@ -12,9 +12,10 @@ function series (options) {
   var last = new Holder(release)
 
   function instance (that, toCall, arg, done) {
-    var holder = last || new Holder(release)
+    var holder = last
 
-    last = null
+    last = holder.next || new Holder(release)
+    holder.next = null
 
     if (toCall.length === 0) {
       done.call(that)
@@ -36,7 +37,7 @@ function series (options) {
   }
 
   function release (holder) {
-    last = holder
+    last.next = holder
     released()
   }
 
@@ -53,6 +54,7 @@ function reset () {
 
 function NoResultsHolder (_release) {
   reset.call(this)
+  this.next = null
 
   var that = this
   var i = 0
@@ -76,6 +78,7 @@ function ResultsHolder (_release) {
   reset.call(this)
 
   this._results = []
+  this.next = null
 
   var that = this
   var i = 0
