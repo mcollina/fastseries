@@ -4,14 +4,16 @@ var defaults = {
   results: true
 }
 
-function series (options) {
+function fastseries (options) {
   options = xtend(defaults, options)
 
   var released = options.released
   var Holder = options.results ? ResultsHolder : NoResultsHolder
   var last = new Holder(release)
 
-  function instance (that, toCall, arg, done) {
+  return series
+
+  function series (that, toCall, arg, done) {
     var holder = last
 
     last = holder.next || new Holder(release)
@@ -40,8 +42,6 @@ function series (options) {
     last.next = holder
     released()
   }
-
-  return instance
 }
 
 function reset () {
@@ -103,4 +103,4 @@ function ResultsHolder (_release) {
 
 function nop () { }
 
-module.exports = series
+module.exports = fastseries
