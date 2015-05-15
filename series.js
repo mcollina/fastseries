@@ -9,19 +9,26 @@ function fastseries (options) {
 
   var released = options.released
   var Holder = options.results ? ResultsHolder : NoResultsHolder
-  var last = new Holder(release)
+  var head = new Holder(release)
+  var tail = head
 
   return series
 
   function series (that, toCall, arg, done) {
-    var holder = last
+    var holder = head
 
-    last = holder.next || new Holder(release)
+    if (holder.next) {
+      head = holder.next
+    } else {
+      head = new Holder(release)
+      tail = head
+    }
+
     holder.next = null
 
     if (toCall.length === 0) {
       done.call(that)
-      released(last)
+      released(head)
     } else {
       holder._callback = done
 
@@ -39,7 +46,8 @@ function fastseries (options) {
   }
 
   function release (holder) {
-    last.next = holder
+    tail.next = holder
+    tail = holder
     released()
   }
 }
