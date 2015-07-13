@@ -2,26 +2,8 @@ var max = 1000000
 var series = require('./')()
 var seriesNoResults = require('./')({ results: false })
 var async = require('async')
+var bench = require('fastbench')
 var obj = {}
-
-function bench (func, done) {
-  var key = max + '*' + func.name
-  var count = -1
-
-  console.time(key)
-  end()
-
-  function end () {
-    if (++count < max) {
-      func(end)
-    } else {
-      console.timeEnd(key)
-      if (done) {
-        done()
-      }
-    }
-  }
-}
 
 function benchFastSeries (done) {
   series(obj, [somethingP, somethingP, somethingP], 42, done)
@@ -77,17 +59,15 @@ function somethingA (cb) {
   setImmediate(cb)
 }
 
-function run (next) {
-  async.eachSeries([
-    benchAsyncSeries,
-    benchAsyncEachSeries,
-    benchAsyncMapSeries,
-    benchSetImmediate,
-    benchFastSeries,
-    benchFastSeriesNoResults,
-    benchFastSeriesEach,
-    benchFastSeriesEachResults
-  ], bench, next)
-}
+var run = bench([
+  benchAsyncSeries,
+  benchAsyncEachSeries,
+  benchAsyncMapSeries,
+  benchSetImmediate,
+  benchFastSeries,
+  benchFastSeriesNoResults,
+  benchFastSeriesEach,
+  benchFastSeriesEachResults
+], max)
 
 run(run)

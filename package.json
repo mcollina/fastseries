@@ -28,6 +28,7 @@
   "homepage": "https://github.com/mcollina/fastseries",
   "devDependencies": {
     "async": "^0.9.0",
+    "fastbench": "^1.0.0",
     "faucet": "0.0.1",
     "pre-commit": "^1.0.6",
     "standard": "^3.0.0",
