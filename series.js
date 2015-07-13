@@ -24,6 +24,7 @@ function fastseries (options) {
       tail = head
     }
 
+    done = done || nop
     holder.next = null
 
     if (toCall.length === 0) {

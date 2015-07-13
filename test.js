@@ -214,3 +214,25 @@ test('call the callback with the given this with no data', function (t) {
     t.equal(obj, this, 'this matches')
   })
 })
+
+test('support no final callback', function (t) {
+  t.plan(6)
+
+  var instance = series()
+  var count = 0
+  var obj = {}
+
+  instance(obj, [build(0), build(1)], 42)
+
+  function build (expected) {
+    return function something (arg, cb) {
+      t.equal(obj, this)
+      t.equal(arg, 42)
+      t.equal(expected, count)
+      setImmediate(function () {
+        count++
+        cb()
+      })
+    }
+  }
+})
