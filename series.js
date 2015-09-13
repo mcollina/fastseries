@@ -1,4 +1,7 @@
+'use strict'
+
 var xtend = require('xtend')
+var reusify = require('reusify')
 var defaults = {
   released: nop,
   results: true
@@ -8,28 +11,19 @@ function fastseries (options) {
   options = xtend(defaults, options)
 
   var released = options.released
-  var Holder = options.results ? ResultsHolder : NoResultsHolder
-  var head = new Holder(release)
-  var tail = head
+  var queue = reusify(options.results ? ResultsHolder : NoResultsHolder)
 
   return series
 
   function series (that, toCall, arg, done) {
-    var holder = head
-
-    if (holder.next) {
-      head = holder.next
-    } else {
-      head = new Holder(release)
-      tail = head
-    }
+    var holder = queue.get()
+    holder._released = release
 
     done = done || nop
-    holder.next = null
 
     if (toCall.length === 0) {
       done.call(that)
-      released(head)
+      release(holder)
     } else {
       holder._callback = done
 
@@ -47,8 +41,7 @@ function fastseries (options) {
   }
 
   function release (holder) {
-    tail.next = holder
-    tail = holder
+    queue.release(holder)
     released()
   }
 }
@@ -61,9 +54,10 @@ function reset () {
   this._each = null
 }
 
-function NoResultsHolder (_release) {
+function NoResultsHolder () {
   reset.call(this)
   this.next = null
+  this._released = null
 
   var that = this
   var i = 0
@@ -78,7 +72,7 @@ function NoResultsHolder (_release) {
       that._callback.call(that._callThat)
       reset.call(that)
       i = 0
-      _release(that)
+      that._released(that)
     }
   }
 }
@@ -88,6 +82,7 @@ function ResultsHolder (_release) {
 
   this._results = []
   this.next = null
+  this._released = null
 
   var that = this
   var i = 0
@@ -105,7 +100,7 @@ function ResultsHolder (_release) {
       reset.call(that)
       that._results = []
       i = 0
-      _release(that)
+      that._released(that)
     }
   }
 }
