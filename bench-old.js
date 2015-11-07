@@ -1,24 +1,24 @@
 var max = 1000000
-var series = require('./')()
-var seriesNoResults = require('./')({ results: false })
+var series = require('./series-old')()
+var seriesNoResults = require('./series-old')({ results: false })
 var async = require('async')
 var bench = require('fastbench')
 var obj = {}
 
 function benchFastSeries (done) {
-  series(obj, [fastSomethingP, fastSomethingP, fastSomethingP], 42, done)
+  series(obj, [somethingP, somethingP, somethingP], 42, done)
 }
 
 function benchFastSeriesNoResults (done) {
-  seriesNoResults(obj, [fastSomethingP, fastSomethingP, fastSomethingP], 42, done)
+  seriesNoResults(obj, [somethingP, somethingP, somethingP], 42, done)
 }
 
 function benchFastSeriesEach (done) {
-  seriesNoResults(obj, fastSomethingP, [1, 2, 3], done)
+  seriesNoResults(obj, somethingP, [1, 2, 3], done)
 }
 
 function benchFastSeriesEachResults (done) {
-  series(obj, fastSomethingP, [1, 2, 3], done)
+  series(obj, somethingP, [1, 2, 3], done)
 }
 
 function benchAsyncSeries (done) {
@@ -49,10 +49,6 @@ function somethingImmediate () {
   } else {
     setImmediate(somethingImmediate)
   }
-}
-
-function fastSomethingP (state, arg, cb) {
-  setImmediate(cb)
 }
 
 function somethingP (arg, cb) {

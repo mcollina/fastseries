@@ -1,4 +1,3 @@
-/*eslint handle-callback-err: 0 */
 var test = require('tape')
 var series = require('./')
 
@@ -16,8 +15,8 @@ test('basically works', function (t) {
   })
 
   function build (expected) {
-    return function something (state, arg, cb) {
-      t.equal(obj, state)
+    return function something (arg, cb) {
+      t.equal(obj, this)
       t.equal(arg, 42)
       t.equal(expected, count)
       setImmediate(function () {
@@ -41,14 +40,14 @@ test('accumulates results', function (t) {
   var count = 0
   var obj = {}
 
-  instance(obj, [something, something], 42, function done (err, state, results) {
+  instance(obj, [something, something], 42, function done (err, results) {
     t.notOk(err, 'no error')
     t.equal(count, 2, 'all functions must have completed')
     t.deepEqual(results, [1, 2])
   })
 
-  function something (state, arg, cb) {
-    t.equal(obj, state)
+  function something (arg, cb) {
+    t.equal(obj, this)
     t.equal(arg, 42)
     setImmediate(function () {
       count++
@@ -76,14 +75,14 @@ test('fowards errs', function (t) {
     t.equal(count, 1, 'only the first function must have completed')
   })
 
-  function something (state, arg, cb) {
+  function something (arg, cb) {
     setImmediate(function () {
       count++
       cb(null, count)
     })
   }
 
-  function somethingErr (state, arg, cb) {
+  function somethingErr (arg, cb) {
     setImmediate(function () {
       count++
       cb(new Error('this is an err!'))
@@ -105,14 +104,14 @@ test('does not forward errors or result with results:false flag', function (t) {
   var count = 0
   var obj = {}
 
-  instance(obj, [something, something], 42, function done (err, state, results) {
+  instance(obj, [something, something], 42, function done (err, results) {
     t.equal(err, undefined, 'no err')
     t.equal(results, undefined, 'no err')
     t.equal(count, 2, 'all functions must have completed')
   })
 
-  function something (state, arg, cb) {
-    t.equal(obj, state)
+  function something (arg, cb) {
+    t.equal(obj, this)
     t.equal(arg, 42)
     setImmediate(function () {
       count++
@@ -157,8 +156,8 @@ test('each support', function (t) {
     t.equal(count, 3, 'all functions must have completed')
   })
 
-  function something (state, arg, cb) {
-    t.equal(obj, state, 'this matches')
+  function something (arg, cb) {
+    t.equal(obj, this, 'this matches')
     t.equal(args[i++], arg, 'the arg is correct')
     setImmediate(function () {
       count++
@@ -171,18 +170,18 @@ test('each support', function (t) {
   }
 })
 
-test('call the callback with the given state', function (t) {
+test('call the callback with the given this', function (t) {
   t.plan(1)
 
   var instance = series()
   var obj = {}
 
-  instance(obj, [build(), build()], 42, function done (err, state) {
-    t.equal(obj, state, 'state matches')
+  instance(obj, [build(), build()], 42, function done () {
+    t.equal(obj, this, 'this matches')
   })
 
   function build () {
-    return function something (state, arg, cb) {
+    return function something (arg, cb) {
       setImmediate(cb)
     }
   }
@@ -194,25 +193,25 @@ test('call the callback with the given this with no results', function (t) {
   var instance = series({ results: false })
   var obj = {}
 
-  instance(obj, [build(), build()], 42, function done (err, state) {
-    t.equal(obj, state, 'state matches')
+  instance(obj, [build(), build()], 42, function done () {
+    t.equal(obj, this, 'this matches')
   })
 
   function build () {
-    return function something (state, arg, cb) {
+    return function something (arg, cb) {
       setImmediate(cb)
     }
   }
 })
 
-test('call the callback with the given state with no data', function (t) {
+test('call the callback with the given this with no data', function (t) {
   t.plan(1)
 
   var instance = series()
   var obj = {}
 
-  instance(obj, [], 42, function done (err, state) {
-    t.equal(obj, state, 'state matches')
+  instance(obj, [], 42, function done () {
+    t.equal(obj, this, 'this matches')
   })
 })
 
@@ -226,8 +225,8 @@ test('support no final callback', function (t) {
   instance(obj, [build(0), build(1)], 42)
 
   function build (expected) {
-    return function something (state, arg, cb) {
-      t.equal(obj, state)
+    return function something (arg, cb) {
+      t.equal(obj, this)
       t.equal(arg, 42)
       t.equal(expected, count)
       setImmediate(function () {

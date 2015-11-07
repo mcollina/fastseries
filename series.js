@@ -1,7 +1,7 @@
 'use strict'
 
 var xtend = require('xtend')
-var reusify = require('reusify')
+// var reusify = require('reusify')
 var defaults = {
   released: nop,
   results: true
@@ -11,23 +11,23 @@ function fastseries (options) {
   options = xtend(defaults, options)
 
   var released = options.released
-  var queue = reusify(options.results ? ResultsHolder : NoResultsHolder)
+  var queue = reusify(options.results ? resultsHolder : noResultsHolder)
 
   return series
 
-  function series (that, toCall, arg, done) {
+  function series (state, toCall, arg, done) {
     var holder = queue.get()
     holder._released = release
 
     done = done || nop
 
     if (toCall.length === 0) {
-      done.call(that)
+      done(undefined, state)
       release(holder)
     } else {
       holder._callback = done
 
-      if (toCall.call) {
+      if (toCall instanceof Function) {
         holder._list = arg
         holder._each = toCall
       } else {
@@ -35,7 +35,7 @@ function fastseries (options) {
         holder._arg = arg
       }
 
-      holder._callThat = that
+      holder._callThat = state
       holder.release()
     }
   }
@@ -46,65 +46,97 @@ function fastseries (options) {
   }
 }
 
-function reset () {
-  this._list = null
-  this._arg = null
-  this._callThat = null
-  this._callback = nop
-  this._each = null
+function reset (state) {
+  state._list = null
+  state._arg = null
+  state._callThat = null
+  state._callback = nop
+  state._each = null
 }
 
-function NoResultsHolder () {
-  reset.call(this)
-  this.next = null
-  this._released = null
-
-  var that = this
+function noResultsHolder () {
   var i = 0
-  this.release = function () {
-    if (i < that._list.length) {
-      if (that._each) {
-        that._each.call(that._callThat, that._list[i++], that.release)
+  var state = {
+    next: null,
+    _released: null,
+    release: function () {
+      if (i < state._list.length) {
+        if (state._each) {
+          state._each(state._callThat, state._list[i++], state.release)
+        } else {
+          state._list[i++](state._callThat, state._arg, state.release)
+        }
       } else {
-        that._list[i++].call(that._callThat, that._arg, that.release)
+        state._callback(undefined, state._callThat)
+        reset(state)
+        i = 0
+        state._released(state)
       }
-    } else {
-      that._callback.call(that._callThat)
-      reset.call(that)
-      i = 0
-      that._released(that)
     }
   }
+  reset(state)
+  return state
 }
 
-function ResultsHolder (_release) {
-  reset.call(this)
-
-  this._results = []
-  this.next = null
-  this._released = null
-
-  var that = this
+function resultsHolder (_release) {
   var i = 0
-  this.release = function (err, result) {
-    if (i !== 0) that._results[i - 1] = result
+  var state = {
+    _results: [],
+    next: null,
+    _released: null,
+    release: function (err, result) {
+      if (i !== 0) state._results[i - 1] = result
 
-    if (!err && i < that._list.length) {
-      if (that._each) {
-        that._each.call(that._callThat, that._list[i++], that.release)
+      if (!err && i < state._list.length) {
+        if (state._each) {
+          state._each(state._callThat, state._list[i++], state.release)
+        } else {
+          state._list[i++](state._callThat, state._arg, state.release)
+        }
       } else {
-        that._list[i++].call(that._callThat, that._arg, that.release)
+        state._callback(err, state._callThat, state._results)
+        reset(state)
+        state._results = []
+        i = 0
+        state._released(state)
       }
-    } else {
-      that._callback.call(that._callThat, err, that._results)
-      reset.call(that)
-      that._results = []
-      i = 0
-      that._released(that)
     }
   }
+
+  reset(state)
+  return state
 }
 
 function nop () { }
+
+function reusify (factory) {
+  var head = factory()
+  var tail = head
+
+  function get () {
+    var current = head
+
+    if (current.next) {
+      head = current.next
+    } else {
+      head = factory()
+      tail = head
+    }
+
+    current.next = null
+
+    return current
+  }
+
+  function release (obj) {
+    tail.next = obj
+    tail = obj
+  }
+
+  return {
+    get: get,
+    release: release
+  }
+}
 
 module.exports = fastseries
