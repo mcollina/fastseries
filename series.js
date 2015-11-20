@@ -65,6 +65,8 @@ function NoResultsHolder () {
     if (i < that._list.length) {
       if (that._each) {
         that._each.call(that._callThat, that._list[i++], that.release)
+      } else if (that._list[i].length === 1) {
+        that._list[i++].call(that._callThat, that.release)
       } else {
         that._list[i++].call(that._callThat, that._arg, that.release)
       }
@@ -92,6 +94,8 @@ function ResultsHolder (_release) {
     if (!err && i < that._list.length) {
       if (that._each) {
         that._each.call(that._callThat, that._list[i++], that.release)
+      } else if (that._list[i].length === 1) {
+        that._list[i++].call(that._callThat, that.release)
       } else {
         that._list[i++].call(that._callThat, that._arg, that.release)
       }
