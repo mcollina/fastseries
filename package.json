@@ -27,12 +27,12 @@
   },
   "homepage": "https://github.com/mcollina/fastseries",
   "devDependencies": {
-    "async": "^0.9.0",
+    "async": "^1.5.0",
     "fastbench": "^1.0.0",
     "faucet": "0.0.1",
     "pre-commit": "^1.0.6",
-    "standard": "^3.0.0",
-    "tape": "^3.5.0"
+    "standard": "^5.4.1",
+    "tape": "^4.2.2"
   },
   "dependencies": {
     "reusify": "^1.0.0",
