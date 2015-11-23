@@ -5,14 +5,17 @@ and map!
 
 Benchmark for doing 3 calls `setImmediate` 1 million times:
 
-* non-reusable `setImmediate`: 4013ms
-* `async.series`: 6216ms
-* `async.eachSeries`: 5158ms
-* `async.mapSeries`: 5660ms
-* `fastseries` with results: 4225ms
-* `fastseries` without results: 4316ms
-* `fastseries` map: 4171ms
-* `fastseries` each: 4259ms
+* non-reusable `setImmediate`: 3887ms
+* `async.series`: 5981ms
+* `async.eachSeries`: 5087ms
+* `async.mapSeries`: 5540ms
+* `neoAsync.series`: 4338ms
+* `neoAsync.eachSeries`: 4195ms
+* `neoAsync.mapSeries`: 4237ms
+* `fastseries` with results: 4096ms
+* `fastseries` without results: 4063ms
+* `fastseries` map: 4032ms
+* `fastseries` each: 4168ms
 
 These benchmarks where taken via `bench.js` on node 4.2.2, on a MacBook
 Pro Retina 2014.

@@ -64,11 +64,9 @@ function NoResultsHolder () {
   this.release = function () {
     if (i < that._list.length) {
       if (that._each) {
-        that._each.call(that._callThat, that._list[i++], that.release)
-      } else if (that._list[i].length === 1) {
-        that._list[i++].call(that._callThat, that.release)
+        makeCall(that._callThat, that._each, that._list[i++], that.release)
       } else {
-        that._list[i++].call(that._callThat, that._arg, that.release)
+        makeCall(that._callThat, that._list[i++], that._arg, that.release)
       }
     } else {
       that._callback.call(that._callThat)
@@ -93,11 +91,9 @@ function ResultsHolder (_release) {
 
     if (!err && i < that._list.length) {
       if (that._each) {
-        that._each.call(that._callThat, that._list[i++], that.release)
-      } else if (that._list[i].length === 1) {
-        that._list[i++].call(that._callThat, that.release)
+        makeCall(that._callThat, that._each, that._list[i++], that.release)
       } else {
-        that._list[i++].call(that._callThat, that._arg, that.release)
+        makeCall(that._callThat, that._list[i++], that._arg, that.release)
       }
     } else {
       that._callback.call(that._callThat, err, that._results)
@@ -105,6 +101,22 @@ function ResultsHolder (_release) {
       that._results = []
       i = 0
       that._released(that)
+    }
+  }
+}
+
+function makeCall (that, cb, arg, release) {
+  if (that) {
+    if (cb.length === 1) {
+      cb.call(that, release)
+    } else {
+      cb.call(that, arg, release)
+    }
+  } else {
+    if (cb.length === 1) {
+      cb(release)
+    } else {
+      cb(arg, release)
     }
   }
 }

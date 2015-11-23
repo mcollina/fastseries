@@ -2,23 +2,23 @@ var max = 1000000
 var series = require('./')()
 var seriesNoResults = require('./')({ results: false })
 var async = require('async')
+var neo = require('neo-async')
 var bench = require('fastbench')
-var obj = {}
 
 function benchFastSeries (done) {
-  series(obj, [somethingP, somethingP, somethingP], 42, done)
+  series(null, [somethingP, somethingP, somethingP], 42, done)
 }
 
 function benchFastSeriesNoResults (done) {
-  seriesNoResults(obj, [somethingP, somethingP, somethingP], 42, done)
+  seriesNoResults(null, [somethingP, somethingP, somethingP], 42, done)
 }
 
 function benchFastSeriesEach (done) {
-  seriesNoResults(obj, somethingP, [1, 2, 3], done)
+  seriesNoResults(null, somethingP, [1, 2, 3], done)
 }
 
 function benchFastSeriesEachResults (done) {
-  series(obj, somethingP, [1, 2, 3], done)
+  series(null, somethingP, [1, 2, 3], done)
 }
 
 function benchAsyncSeries (done) {
@@ -31,6 +31,18 @@ function benchAsyncEachSeries (done) {
 
 function benchAsyncMapSeries (done) {
   async.mapSeries([1, 2, 3], somethingP, done)
+}
+
+function benchNeoSeries (done) {
+  neo.series([somethingA, somethingA, somethingA], done)
+}
+
+function benchNeoEachSeries (done) {
+  neo.eachSeries([1, 2, 3], somethingP, done)
+}
+
+function benchNeoMapSeries (done) {
+  neo.mapSeries([1, 2, 3], somethingP, done)
 }
 
 var nextDone
@@ -60,10 +72,13 @@ function somethingA (cb) {
 }
 
 var run = bench([
+  benchSetImmediate,
   benchAsyncSeries,
   benchAsyncEachSeries,
   benchAsyncMapSeries,
-  benchSetImmediate,
+  benchNeoSeries,
+  benchNeoEachSeries,
+  benchNeoMapSeries,
   benchFastSeries,
   benchFastSeriesNoResults,
   benchFastSeriesEach,
