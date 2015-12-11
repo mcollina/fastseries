@@ -33,7 +33,8 @@
     "neo-async": "^1.7.0",
     "pre-commit": "^1.0.6",
     "standard": "^5.4.1",
-    "tape": "^4.2.2"
+    "tape": "^4.2.2",
+    "tiny-each-async": "^2.0.2"
   },
   "dependencies": {
     "reusify": "^1.0.0",

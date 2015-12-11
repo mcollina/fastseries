@@ -4,6 +4,7 @@ var seriesNoResults = require('./')({ results: false })
 var async = require('async')
 var neo = require('neo-async')
 var bench = require('fastbench')
+var tinyEachAsync = require('tiny-each-async')
 
 function benchFastSeries (done) {
   series(null, [somethingP, somethingP, somethingP], 42, done)
@@ -45,6 +46,10 @@ function benchNeoMapSeries (done) {
   neo.mapSeries([1, 2, 3], somethingP, done)
 }
 
+function benchTinyEachAsync (done) {
+  tinyEachAsync([1, 2, 3], 1, somethingP, done)
+}
+
 var nextDone
 var nextCount
 
@@ -79,6 +84,7 @@ var run = bench([
   benchNeoSeries,
   benchNeoEachSeries,
   benchNeoMapSeries,
+  benchTinyEachAsync,
   benchFastSeries,
   benchFastSeriesNoResults,
   benchFastSeriesEach,
