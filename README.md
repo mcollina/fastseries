@@ -12,6 +12,7 @@ Benchmark for doing 3 calls `setImmediate` 1 million times:
 * `neoAsync.series`: 4338ms
 * `neoAsync.eachSeries`: 4195ms
 * `neoAsync.mapSeries`: 4237ms
+* `tiny-each-async`: 4575ms
 * `fastseries` with results: 4096ms
 * `fastseries` without results: 4063ms
 * `fastseries` map: 4032ms
