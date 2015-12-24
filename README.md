@@ -1,7 +1,13 @@
-# fastseries [![Build Status](https://travis-ci.org/mcollina/fastseries.svg?branch=master)](https://travis-ci.org/mcollina/fastseries)
+# fastseries
 
-Zero-overhead series function call for node.js. Also supports each
-and map!
+
+[![npm version][npm-badge]][npm-url]
+[![Build Status][travis-badge]][travis-url]
+[![Coverage Status][coveralls-badge]][coveralls-url]
+[![Dependency Status][david-badge]][david-url]
+
+Zero-overhead series function call for node.js.
+Also supports `each` and `map`!
 
 Benchmark for doing 3 calls `setImmediate` 1 million times:
 
@@ -112,3 +118,13 @@ does not cause **any memory allocations**.
 ## License
 
 ISC
+
+fastseries.
+[npm-badge]: https://badge.fury.io/js/jsonic.svg
+[npm-url]: https://badge.fury.io/js/jsonic
+[travis-badge]: https://api.travis-ci.org/mcollina/jsonic.svg
+[travis-url]: https://travis-ci.org/mcollina/jsonic
+[coveralls-badge]:https://coveralls.io/repos/mcollina/jsonic/badge.svg?branch=master&service=github
+[coveralls-url]: https://coveralls.io/github/mcollina/jsonic?branch=master
+[david-badge]: https://david-dm.org/mcollina/jsonic.svg
+[david-url]: https://david-dm.org/mcollina/jsonic
