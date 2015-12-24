@@ -1,6 +1,5 @@
 # fastseries
 
-
 [![npm version][npm-badge]][npm-url]
 [![Build Status][travis-badge]][travis-url]
 [![Coverage Status][coveralls-badge]][coveralls-url]
@@ -119,12 +118,11 @@ does not cause **any memory allocations**.
 
 ISC
 
-fastseries.
-[npm-badge]: https://badge.fury.io/js/jsonic.svg
-[npm-url]: https://badge.fury.io/js/jsonic
-[travis-badge]: https://api.travis-ci.org/mcollina/jsonic.svg
-[travis-url]: https://travis-ci.org/mcollina/jsonic
-[coveralls-badge]:https://coveralls.io/repos/mcollina/jsonic/badge.svg?branch=master&service=github
-[coveralls-url]: https://coveralls.io/github/mcollina/jsonic?branch=master
-[david-badge]: https://david-dm.org/mcollina/jsonic.svg
-[david-url]: https://david-dm.org/mcollina/jsonic
+[npm-badge]: https://badge.fury.io/js/fastseries.svg
+[npm-url]: https://badge.fury.io/js/fastseries
+[travis-badge]: https://api.travis-ci.org/mcollina/fastseries.svg
+[travis-url]: https://travis-ci.org/mcollina/fastseries
+[coveralls-badge]:https://coveralls.io/repos/mcollina/fastseries/badge.svg?branch=master&service=github
+[coveralls-url]: https://coveralls.io/github/mcollina/fastseries?branch=master
+[david-badge]: https://david-dm.org/mcollina/fastseries.svg
+[david-url]: https://david-dm.org/mcollina/fastseries
