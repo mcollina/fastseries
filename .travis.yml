@@ -1,11 +1,18 @@
 sudo: false
 language: node_js
-
 node_js:
-  - "0.10"
-  - "0.12"
-  - "4"
-  - "6"
-
-after_script:
-  npm run coverage
+  - 0.10
+  - 0.12
+  - 4
+  - 6
+  - 8
+  - 10
+  - 12
+script:
+  - npm run lint
+  - npm run coverage
+cache:
+  directories:
+    - node_modules
+after_success:
+  npm run coveralls
