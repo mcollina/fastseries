@@ -1,7 +1,6 @@
 'use strict'
 
 var defaults = {
-  released: nop,
   results: true
 }
 
@@ -19,8 +18,6 @@ function fastseries (options) {
     seriesList = noResultList
   }
 
-  var released = options.released
-
   return series
 
   function series (that, toCall, arg, done) {
@@ -28,9 +25,8 @@ function fastseries (options) {
 
     if (toCall.length === 0) {
       done.call(that)
-      released()
     } else if (toCall.bind) {
-      seriesEach(toCall.bind(that), arg, done, released)
+      seriesEach(toCall.bind(that), arg, done)
     } else {
       var _list
       if (that) {
@@ -42,12 +38,12 @@ function fastseries (options) {
         _list = toCall
       }
 
-      seriesList(_list, arg, done, released)
+      seriesList(_list, arg, done)
     }
   }
 }
 
-function noResultEach (each, list, cb, released) {
+function noResultEach (each, list, cb) {
   var i = 0
   var length = list.length
   var makeCall
@@ -65,12 +61,11 @@ function noResultEach (each, list, cb, released) {
       makeCall(each, list[i++], release)
     } else {
       cb()
-      released()
     }
   }
 }
 
-function noResultList (list, arg, cb, released) {
+function noResultList (list, arg, cb) {
   var i = 0
   var length = list.length
   var makeCall
@@ -88,12 +83,11 @@ function noResultList (list, arg, cb, released) {
       makeCall(list[i++], arg, release)
     } else {
       cb()
-      released()
     }
   }
 }
 
-function resultEach (each, list, cb, released) {
+function resultEach (each, list, cb) {
   var i = 0
   var length = list.length
   var makeCall
@@ -111,7 +105,6 @@ function resultEach (each, list, cb, released) {
   function release (err, result) {
     if (err) {
       cb(err)
-      released()
       return
     }
 
@@ -123,12 +116,11 @@ function resultEach (each, list, cb, released) {
       makeCall(each, list[i++], release)
     } else {
       cb(null, results)
-      released()
     }
   }
 }
 
-function resultList (list, arg, cb, released) {
+function resultList (list, arg, cb) {
   var i = 0
   var length = list.length
   var makeCall
@@ -146,7 +138,6 @@ function resultList (list, arg, cb, released) {
   function release (err, result) {
     if (err) {
       cb(err)
-      released()
       return
     }
 
@@ -158,7 +149,6 @@ function resultList (list, arg, cb, released) {
       makeCall(list[i++], arg, release)
     } else {
       cb(null, results)
-      released()
     }
   }
 }

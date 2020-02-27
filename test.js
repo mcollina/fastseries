@@ -2,11 +2,9 @@ var test = require('tape')
 var series = require('./')
 
 test('basically works', function (t) {
-  t.plan(8)
+  t.plan(7)
 
-  var instance = series({
-    released: released
-  })
+  var instance = series()
   var count = 0
   var obj = {}
 
@@ -25,18 +23,12 @@ test('basically works', function (t) {
       })
     }
   }
-
-  function released () {
-    t.pass()
-  }
 })
 
 test('accumulates results', function (t) {
-  t.plan(8)
+  t.plan(7)
 
-  var instance = series({
-    released: released
-  })
+  var instance = series()
   var count = 0
   var obj = {}
 
@@ -54,18 +46,12 @@ test('accumulates results', function (t) {
       cb(null, count)
     })
   }
-
-  function released () {
-    t.pass()
-  }
 })
 
 test('fowards errs', function (t) {
-  t.plan(4)
+  t.plan(3)
 
-  var instance = series({
-    released: released
-  })
+  var instance = series()
   var count = 0
   var obj = {}
 
@@ -88,17 +74,12 @@ test('fowards errs', function (t) {
       cb(new Error('this is an err!'))
     })
   }
-
-  function released () {
-    t.pass()
-  }
 })
 
 test('does not forward errors or result with results:false flag', function (t) {
-  t.plan(8)
+  t.plan(7)
 
   var instance = series({
-    released: released,
     results: false
   })
   var count = 0
@@ -118,35 +99,23 @@ test('does not forward errors or result with results:false flag', function (t) {
       cb()
     })
   }
-
-  function released () {
-    t.pass()
-  }
 })
 
-test('should call done and released if an empty is passed', function (t) {
-  t.plan(2)
+test('should call done iff an empty is passed', function (t) {
+  t.plan(1)
 
-  var instance = series({
-    released: released
-  })
+  var instance = series()
   var obj = {}
 
   instance(obj, [], 42, function done () {
     t.pass()
   })
-
-  function released () {
-    t.pass()
-  }
 })
 
 test('each support', function (t) {
-  t.plan(8)
+  t.plan(7)
 
-  var instance = series({
-    released: released
-  })
+  var instance = series()
   var count = 0
   var obj = {}
   var args = [1, 2, 3]
@@ -163,10 +132,6 @@ test('each support', function (t) {
       count++
       cb()
     })
-  }
-
-  function released () {
-    t.pass()
   }
 })
 

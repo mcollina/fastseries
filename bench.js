@@ -77,14 +77,14 @@ function somethingA (cb) {
 }
 
 var run = bench([
-  // benchSetImmediate,
-  // benchAsyncSeries,
-  // benchAsyncEachSeries,
-  // benchAsyncMapSeries,
-  // benchNeoSeries,
-  // benchNeoEachSeries,
-  // benchNeoMapSeries,
-  // benchTinyEachAsync,
+  benchSetImmediate,
+  benchAsyncSeries,
+  benchAsyncEachSeries,
+  benchAsyncMapSeries,
+  benchNeoSeries,
+  benchNeoEachSeries,
+  benchNeoMapSeries,
+  benchTinyEachAsync,
   benchFastSeries,
   benchFastSeriesNoResults,
   benchFastSeriesEach,
