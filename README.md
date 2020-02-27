@@ -98,6 +98,8 @@ benchFastSeriesEach*1000000: 2562.255ms
 benchFastSeriesEachResults*1000000: 2606.948ms
 ```
 
+Benchmarks taken on Node 12.16.1 on a dedicated server.
+
 See [bench.js](./bench.js) for mode details.
 
 ## License
