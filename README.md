@@ -8,24 +8,6 @@
 Zero-overhead series function call for node.js.
 Also supports `each` and `map`!
 
-Benchmark for doing 3 calls `setImmediate` 1 million times:
-
-* non-reusable `setImmediate`: 3887ms
-* `async.series`: 5981ms
-* `async.eachSeries`: 5087ms
-* `async.mapSeries`: 5540ms
-* `neoAsync.series`: 4338ms
-* `neoAsync.eachSeries`: 4195ms
-* `neoAsync.mapSeries`: 4237ms
-* `tiny-each-async`: 4575ms
-* `fastseries` with results: 4096ms
-* `fastseries` without results: 4063ms
-* `fastseries` map: 4032ms
-* `fastseries` each: 4168ms
-
-These benchmarks where taken via `bench.js` on node 4.2.2, on a MacBook
-Pro Retina 2014.
-
 If you need zero-overhead parallel function call, check out
 [fastparallel](http://npm.im/fastparallel).
 
@@ -35,10 +17,6 @@ If you need zero-overhead parallel function call, check out
 
 ```js
 var series = require('fastseries')({
-  // this is a function that will be called
-  // when a series completes
-  released: completed,
-
   // if you want the results, then here you are
   results: true
 })
@@ -62,20 +40,12 @@ function something (arg, cb) {
 function done (err, results) {
   console.log('series completed, results:', results)
 }
-
-function completed () {
-  console.log('series completed!')
-}
 ```
 
 ## Example for each and map calls
 
 ```js
 var series = require('fastseries')({
-  // this is a function that will be called
-  // when a series completes
-  released: completed,
-
   // if you want the results, then here you are
   // passing false disables map
   results: true
@@ -100,11 +70,6 @@ function something (arg, cb) {
 function done (err, results) {
   console.log('series completed, results:', results)
 }
-
-function completed () {
-  console.log('series completed!')
-}
-
 ```
 
 ## Caveats
@@ -113,6 +78,27 @@ The `done` function will be called only once, even if more than one error happen
 
 This library works by caching the latest used function, so that running a new series
 does not cause **any memory allocations**.
+
+## Benchmarks
+
+Benchmark for doing 3 calls `setImmediate` 1 million times:
+
+```
+benchSetImmediate*1000000: 2491.637ms
+benchAsyncSeries*1000000: 3112.809ms
+benchAsyncEachSeries*1000000: 2915.850ms
+benchAsyncMapSeries*1000000: 3071.146ms
+benchNeoSeries*1000000: 2651.700ms
+benchNeoEachSeries*1000000: 2649.060ms
+benchNeoMapSeries*1000000: 2638.345ms
+benchTinyEachAsync*1000000: 2741.891ms
+benchFastSeries*1000000: 2571.779ms
+benchFastSeriesNoResults*1000000: 2563.580ms
+benchFastSeriesEach*1000000: 2562.255ms
+benchFastSeriesEachResults*1000000: 2606.948ms
+```
+
+See [bench.js](./bench.js) for mode details.
 
 ## License
 

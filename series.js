@@ -26,12 +26,16 @@ function fastseries (options) {
     if (toCall.length === 0) {
       done.call(that)
     } else if (toCall.bind) {
-      seriesEach(toCall.bind(that), arg, done)
+      if (that) {
+        toCall = toCall.bind(that)
+      }
+      seriesEach(toCall, arg, done)
     } else {
       var _list
       if (that) {
-        _list = new Array(toCall.length)
-        for (var i = 0; i < toCall.length; i++) {
+        var length = toCall.length
+        _list = new Array(length)
+        for (var i = 0; i < length; i++) {
           _list[i] = toCall[i].bind(that)
         }
       } else {
@@ -133,7 +137,7 @@ function resultList (list, arg, cb) {
 
   var results = new Array(length)
 
-  release()
+  release(null, null)
 
   function release (err, result) {
     if (err) {
