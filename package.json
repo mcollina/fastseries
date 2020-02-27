@@ -8,6 +8,7 @@
     "unit": "tape test.js",
     "unit:report": "nyc --reporter=html --reporter=cobertura --reporter=text tape test.js",
     "unit:cov": "nyc --reporter=lcovonly tape test.js",
+    "cov": "nyc --reporter=text tape test.js",
     "test:report": "npm run lint && npm run unit:report",
     "test": "npm run lint && npm run unit:cov"
   },

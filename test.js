@@ -1,3 +1,5 @@
+'use strict'
+
 var test = require('tape')
 var series = require('./')
 
@@ -15,6 +17,29 @@ test('basically works', function (t) {
   function build (expected) {
     return function something (arg, cb) {
       t.equal(obj, this)
+      t.equal(arg, 42)
+      t.equal(expected, count)
+      setImmediate(function () {
+        count++
+        cb()
+      })
+    }
+  }
+})
+
+test('without this', function (t) {
+  t.plan(7)
+
+  var instance = series()
+  var count = 0
+
+  instance(null, [build(0), build(1)], 42, function done () {
+    t.equal(count, 2, 'all functions must have completed')
+  })
+
+  function build (expected) {
+    return function something (arg, cb) {
+      t.equal(undefined, this)
       t.equal(arg, 42)
       t.equal(expected, count)
       setImmediate(function () {
@@ -127,6 +152,46 @@ test('each support', function (t) {
 
   function something (arg, cb) {
     t.equal(obj, this, 'this matches')
+    t.equal(args[i++], arg, 'the arg is correct')
+    setImmediate(function () {
+      count++
+      cb()
+    })
+  }
+})
+
+test('each errors', function (t) {
+  t.plan(2)
+
+  var instance = series()
+  var obj = {}
+  var args = [1, 2, 3]
+  var err = new Error('kaboom')
+
+  instance(obj, something, [].concat(args), function done (_err) {
+    t.equal(err, _err)
+  })
+
+  function something (arg, cb) {
+    t.pass('something called')
+    cb(err)
+  }
+})
+
+test('each without this', function (t) {
+  t.plan(7)
+
+  var instance = series()
+  var count = 0
+  var args = [1, 2, 3]
+  var i = 0
+
+  instance(null, something, [].concat(args), function done () {
+    t.equal(count, 3, 'all functions must have completed')
+  })
+
+  function something (arg, cb) {
+    t.equal(undefined, this, 'this matches')
     t.equal(args[i++], arg, 'the arg is correct')
     setImmediate(function () {
       count++
@@ -274,5 +339,30 @@ test('each without results support with nothing to process', function (t) {
 
   function something (arg, cb) {
     t.fail('this should never happen')
+  }
+})
+
+test('each without results', function (t) {
+  t.plan(7)
+
+  var instance = series({
+    results: false
+  })
+  var count = 0
+  var obj = {}
+  var args = [1, 2, 3]
+  var i = 0
+
+  instance(obj, something, [].concat(args), function done () {
+    t.equal(count, 3, 'all functions must have completed')
+  })
+
+  function something (arg, cb) {
+    t.equal(obj, this, 'this matches')
+    t.equal(args[i++], arg, 'the arg is correct')
+    setImmediate(function () {
+      count++
+      cb()
+    })
   }
 })

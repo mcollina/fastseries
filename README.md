@@ -84,18 +84,18 @@ does not cause **any memory allocations**.
 Benchmark for doing 3 calls `setImmediate` 1 million times:
 
 ```
-benchSetImmediate*1000000: 2491.637ms
-benchAsyncSeries*1000000: 3112.809ms
-benchAsyncEachSeries*1000000: 2915.850ms
-benchAsyncMapSeries*1000000: 3071.146ms
-benchNeoSeries*1000000: 2651.700ms
-benchNeoEachSeries*1000000: 2649.060ms
-benchNeoMapSeries*1000000: 2638.345ms
-benchTinyEachAsync*1000000: 2741.891ms
-benchFastSeries*1000000: 2571.779ms
-benchFastSeriesNoResults*1000000: 2563.580ms
-benchFastSeriesEach*1000000: 2562.255ms
-benchFastSeriesEachResults*1000000: 2606.948ms
+benchSetImmediate*1000000: 2460.623ms
+benchAsyncSeries*1000000: 3064.569ms
+benchAsyncEachSeries*1000000: 2913.525ms
+benchAsyncMapSeries*1000000: 3020.794ms
+benchNeoSeries*1000000: 2617.064ms
+benchNeoEachSeries*1000000: 2621.672ms
+benchNeoMapSeries*1000000: 2611.294ms
+benchTinyEachAsync*1000000: 2706.457ms
+benchFastSeries*1000000: 2540.653ms
+benchFastSeriesNoResults*1000000: 2538.674ms
+benchFastSeriesEach*1000000: 2534.856ms
+benchFastSeriesEachResults*1000000: 2545.394ms
 ```
 
 Benchmarks taken on Node 12.16.1 on a dedicated server.

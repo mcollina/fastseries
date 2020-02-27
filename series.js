@@ -50,19 +50,12 @@ function fastseries (options) {
 function noResultEach (each, list, cb) {
   var i = 0
   var length = list.length
-  var makeCall
-
-  if (cb.length === 1) {
-    makeCall = makeCallOne
-  } else {
-    makeCall = makeCallTwo
-  }
 
   release()
 
   function release () {
     if (i < length) {
-      makeCall(each, list[i++], release)
+      makeCallTwo(each, list[i++], release)
     } else {
       cb()
     }
@@ -94,14 +87,6 @@ function noResultList (list, arg, cb) {
 function resultEach (each, list, cb) {
   var i = 0
   var length = list.length
-  var makeCall
-
-  if (cb.length === 1) {
-    makeCall = makeCallOne
-  } else {
-    makeCall = makeCallTwo
-  }
-
   var results = new Array(length)
 
   release(null, null)
@@ -117,7 +102,7 @@ function resultEach (each, list, cb) {
     }
 
     if (i < length) {
-      makeCall(each, list[i++], release)
+      makeCallTwo(each, list[i++], release)
     } else {
       cb(null, results)
     }
