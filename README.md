@@ -1,7 +1,7 @@
 # fastseries
 
+![ci][ci-url]
 [![npm version][npm-badge]][npm-url]
-[![Build Status][travis-badge]][travis-url]
 [![Coverage Status][coveralls-badge]][coveralls-url]
 [![Dependency Status][david-badge]][david-url]
 
@@ -118,10 +118,9 @@ does not cause **any memory allocations**.
 
 ISC
 
+[ci-url]: https://github.com/mcollina/fastseries/workflows/ci/badge.svg
 [npm-badge]: https://badge.fury.io/js/fastseries.svg
 [npm-url]: https://badge.fury.io/js/fastseries
-[travis-badge]: https://api.travis-ci.org/mcollina/fastseries.svg
-[travis-url]: https://travis-ci.org/mcollina/fastseries
 [coveralls-badge]:https://coveralls.io/repos/mcollina/fastseries/badge.svg?branch=master&service=github
 [coveralls-url]: https://coveralls.io/github/mcollina/fastseries?branch=master
 [david-badge]: https://david-dm.org/mcollina/fastseries.svg
