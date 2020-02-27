@@ -1,12 +1,12 @@
+'use strict'
+
 var test = require('tape')
 var series = require('./')
 
 test('basically works', function (t) {
-  t.plan(8)
+  t.plan(7)
 
-  var instance = series({
-    released: released
-  })
+  var instance = series()
   var count = 0
   var obj = {}
 
@@ -25,18 +25,35 @@ test('basically works', function (t) {
       })
     }
   }
+})
 
-  function released () {
-    t.pass()
+test('without this', function (t) {
+  t.plan(7)
+
+  var instance = series()
+  var count = 0
+
+  instance(null, [build(0), build(1)], 42, function done () {
+    t.equal(count, 2, 'all functions must have completed')
+  })
+
+  function build (expected) {
+    return function something (arg, cb) {
+      t.equal(undefined, this)
+      t.equal(arg, 42)
+      t.equal(expected, count)
+      setImmediate(function () {
+        count++
+        cb()
+      })
+    }
   }
 })
 
 test('accumulates results', function (t) {
-  t.plan(8)
+  t.plan(7)
 
-  var instance = series({
-    released: released
-  })
+  var instance = series()
   var count = 0
   var obj = {}
 
@@ -54,18 +71,12 @@ test('accumulates results', function (t) {
       cb(null, count)
     })
   }
-
-  function released () {
-    t.pass()
-  }
 })
 
 test('fowards errs', function (t) {
-  t.plan(4)
+  t.plan(3)
 
-  var instance = series({
-    released: released
-  })
+  var instance = series()
   var count = 0
   var obj = {}
 
@@ -88,17 +99,12 @@ test('fowards errs', function (t) {
       cb(new Error('this is an err!'))
     })
   }
-
-  function released () {
-    t.pass()
-  }
 })
 
 test('does not forward errors or result with results:false flag', function (t) {
-  t.plan(8)
+  t.plan(7)
 
   var instance = series({
-    released: released,
     results: false
   })
   var count = 0
@@ -118,35 +124,23 @@ test('does not forward errors or result with results:false flag', function (t) {
       cb()
     })
   }
-
-  function released () {
-    t.pass()
-  }
 })
 
-test('should call done and released if an empty is passed', function (t) {
-  t.plan(2)
+test('should call done iff an empty is passed', function (t) {
+  t.plan(1)
 
-  var instance = series({
-    released: released
-  })
+  var instance = series()
   var obj = {}
 
   instance(obj, [], 42, function done () {
     t.pass()
   })
-
-  function released () {
-    t.pass()
-  }
 })
 
 test('each support', function (t) {
-  t.plan(8)
+  t.plan(7)
 
-  var instance = series({
-    released: released
-  })
+  var instance = series()
   var count = 0
   var obj = {}
   var args = [1, 2, 3]
@@ -164,9 +158,45 @@ test('each support', function (t) {
       cb()
     })
   }
+})
 
-  function released () {
-    t.pass()
+test('each errors', function (t) {
+  t.plan(2)
+
+  var instance = series()
+  var obj = {}
+  var args = [1, 2, 3]
+  var err = new Error('kaboom')
+
+  instance(obj, something, [].concat(args), function done (_err) {
+    t.equal(err, _err)
+  })
+
+  function something (arg, cb) {
+    t.pass('something called')
+    cb(err)
+  }
+})
+
+test('each without this', function (t) {
+  t.plan(7)
+
+  var instance = series()
+  var count = 0
+  var args = [1, 2, 3]
+  var i = 0
+
+  instance(null, something, [].concat(args), function done () {
+    t.equal(count, 3, 'all functions must have completed')
+  })
+
+  function something (arg, cb) {
+    t.equal(undefined, this, 'this matches')
+    t.equal(args[i++], arg, 'the arg is correct')
+    setImmediate(function () {
+      count++
+      cb()
+    })
   }
 })
 
@@ -309,5 +339,30 @@ test('each without results support with nothing to process', function (t) {
 
   function something (arg, cb) {
     t.fail('this should never happen')
+  }
+})
+
+test('each without results', function (t) {
+  t.plan(7)
+
+  var instance = series({
+    results: false
+  })
+  var count = 0
+  var obj = {}
+  var args = [1, 2, 3]
+  var i = 0
+
+  instance(obj, something, [].concat(args), function done () {
+    t.equal(count, 3, 'all functions must have completed')
+  })
+
+  function something (arg, cb) {
+    t.equal(obj, this, 'this matches')
+    t.equal(args[i++], arg, 'the arg is correct')
+    setImmediate(function () {
+      count++
+      cb()
+    })
   }
 })
